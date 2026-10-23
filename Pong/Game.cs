@@ -5,9 +5,9 @@ using usg.core;
 
 namespace Pong;
 
-public class Game1 : UltraGame
+public class Game : UltraGame
 {
-    public Game1() : base("Pong", 1920, 1080, false)
+    public Game() : base("Pong", 1920, 1080, false)
     {
 
     }
