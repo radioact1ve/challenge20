@@ -7,11 +7,11 @@ namespace usg.core
 {
     public class UltraGame : Game
     {
-        private static UltraGame instance;
-        private GraphicsDeviceManager graphicsDeviceManager;
-        private SpriteBatch spriteBatch;
+        protected static UltraGame instance;
+        protected GraphicsDeviceManager graphicsDeviceManager;
+        protected SpriteBatch spriteBatch;
 
-        public UltraGame(string title, int width, int height, bool isFullScreen)
+        public UltraGame(string title, int width, int height, bool isFullScreen): base()
         {
             if (instance != null)
             {

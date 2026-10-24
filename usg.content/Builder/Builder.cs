@@ -35,6 +35,7 @@ public class Builder : ContentBuilder
     public override IContentCollection GetContentCollection()
     {
         var contentCollection = new ContentCollection();
+        contentCollection.Include<WildcardRule>("pong/*");
 
         // By default, no content will be imported from the Assets folder using the default importer for their file type.
         // Please define your content collection rules here.
