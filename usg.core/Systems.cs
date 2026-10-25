@@ -31,7 +31,7 @@ public class DrawSystem : IDraw
 {
     public void Draw(DrawContext ctx, GameTime gameTime)
     {
-        var sprites = ctx.Store<Image2DComponent>();
+        var sprites = ctx.Store<Image2D>();
         var positions = ctx.Store<Position>();
 
         foreach (int e in sprites.Entities)
