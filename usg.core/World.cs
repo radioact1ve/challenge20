@@ -5,44 +5,30 @@ using System.Collections.Generic;
 
 namespace usg.core;
 
-public interface IComponentStore<T> where T : struct
-{
-    void Add(int entity, T component);
-    ref T Get(int entity);
-    bool Has(int entity);
-    bool Remove(int entity);
-}
-
 public interface ISystem
 {
-    void Update(World world, GameTime gameTime);
+    void Update(SystemContext ctx, GameTime gameTime);
 }
 
 public interface IDraw
 {
-    void Draw(World world, SpriteBatch spriteBatch, GameTime gameTime);
+    void Draw(DrawContext ctx, GameTime gameTime);
 }
 
 public class World
 {
     public EntityManager EntityManager { get; private set; }
 
-    private List<Entity> players = new();
     private List<ISystem> systems = new();
     private List<IDraw> drawSystems = new();
+
+    public CommandBuffer Commands = new();
 
     private readonly Dictionary<Type, object> stores = new();
 
     public World()
     {
         EntityManager = new EntityManager();
-    }
-
-    public Entity EntityPlayer()
-    {
-        var entity = EntityManager.Create();
-        players.Add(entity);
-        return entity;
     }
 
     public Entity EntityCreate()
@@ -52,22 +38,35 @@ public class World
 
     public void EntityDestroy(Entity entity)
     {
+        if (!EntityManager.IsAlive(entity))
+#if DEBUG
+            throw new InvalidOperationException("Entity is not alive.");
+#else
+            return;
+#endif
+        foreach (var store in stores.Values)
+        {
+            ((IStore)store).Remove(entity.Id);
+        }
         EntityManager.Destroy(entity.Id);
     }
 
-    public ReadOnlySpan<int> Entities<T>() where T : struct =>
-        GetStore<T>().Entities;
+    public Entity Handle(int id) => new Entity(id, EntityManager.GetGeneration(id));
 
-    public bool HasComponent<T>(int entity) where T : struct =>
-        GetStore<T>().Has(entity);
 
-    public ref T GetComponent<T>(int entity) where T : struct =>
-        ref GetStore<T>().Get(entity);
+    public bool HasComponent<T>(Entity entity) where T : struct =>
+        Store<T>().Has(entity.Id);
 
-    public void RemoveComponent<T>(int entity) where T : struct =>
-        GetStore<T>().Remove(entity);
+    public ref T GetComponent<T>(Entity entity) where T : struct =>
+        ref Store<T>().Get(entity.Id);
 
-    private SparseSet<T> GetStore<T>() where T : struct
+    public void RemoveComponent<T>(Entity entity) where T : struct
+    {
+        if (!EntityManager.IsAlive(entity)) return;
+        Store<T>().Remove(entity.Id);
+    }
+
+    public SparseSet<T> Store<T>() where T : struct
     {
         if (!stores.TryGetValue(typeof(T), out var store))
             stores[typeof(T)] = store = new SparseSet<T>();
@@ -76,7 +75,7 @@ public class World
     }
     public void AddComponent<T>(Entity entity, T component) where T : struct
     {
-        GetStore<T>().Add(entity.Id, component);
+        Store<T>().Add(entity.Id, component);
     }
 
     public void AddSystem(ISystem system) => systems.Add(system);
@@ -84,20 +83,16 @@ public class World
     {
         foreach (var system in systems)
         {
-            system.Update(this, gameTime);
+            system.Update(new SystemContext(this), gameTime);
+            Commands.Execute(this);
         }
     }
     public void AddDrawSystem(IDraw drawSystem) => drawSystems.Add(drawSystem);
-    public void Draw(GameTime gameTime)
+    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         foreach (var drawSystem in drawSystems)
         {
-            drawSystem.Draw(this, Core.SpriteBatch, gameTime);
+            drawSystem.Draw(new DrawContext(this, spriteBatch), gameTime);
         }
-    }
-
-    public void Exit()
-    {
-        Core.Instance.Exit();
     }
 }

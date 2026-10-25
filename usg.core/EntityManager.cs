@@ -3,11 +3,7 @@ using System.Collections.Generic;
 
 namespace usg.core;
 
-public struct Entity
-{
-    public int Id;
-    public int Generation;
-}
+public readonly record struct Entity(int Id, int Generation);
 
 public class EntityManager
 {
@@ -21,7 +17,7 @@ public class EntityManager
         if (id == generations.Count)
             generations.Add(0);
 
-        return new Entity { Id = id, Generation = generations[id] };
+        return new Entity(id, generations[id]);
     }
 
     public int GetGeneration(int id)

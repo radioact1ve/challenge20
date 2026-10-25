@@ -3,11 +3,14 @@ using System.Collections.Generic;
 
 namespace usg.core;
 
-public sealed class SparseSet<T> where T : struct
+internal interface IStore { bool Remove(int entity); }
+
+public sealed class SparseSet<T> : IStore where T : struct
 {
-    private int[] sparse = new int[1024];
-    private int[] dense = new int[1024];
-    private T[] data = new T[1024];
+    const int maxSize = 1024;
+    private int[] sparse = new int[maxSize];
+    private int[] dense = new int[maxSize];
+    private T[] data = new T[maxSize];
     private int count;
 
     public SparseSet()
@@ -20,6 +23,10 @@ public sealed class SparseSet<T> where T : struct
 
     public bool Has(int entity)
     {
+        // Check if the entity is within the bounds of the sparse array
+        // Is there more than maxSize entities?
+        if ((uint)entity >= (uint)sparse.Length) return false;
+
         int i = sparse[entity];
         return i != -1 && i < count && dense[i] == entity;
     }

@@ -1,32 +1,43 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace usg.core;
 
-public class DrawSystem : IDraw
+public readonly struct SystemContext
 {
-    public void Draw(World world, SpriteBatch spriteBatch, GameTime gameTime)
-    {
-        foreach (int e in world.Entities<Image2DComponent>())
-        {
-            if (!world.HasComponent<Position>(e))
-                continue;
+    private readonly World world;
+    internal SystemContext(World w) => world = w;
 
-            ref var transform = ref world.GetComponent<Position>(e);
-            ref var sprite = ref world.GetComponent<Image2DComponent>(e);
-
-            spriteBatch.Draw(sprite.Texture, transform.Value, Color.White);
-        }
-    }
+    public SparseSet<T> Store<T>() where T : struct => world.Store<T>();
+    public ref T Get<T>(Entity e) where T : struct => ref world.GetComponent<T>(e);
+    public bool Has<T>(Entity e) where T : struct => world.HasComponent<T>(e);
+    public Entity Create() => world.EntityCreate();
+    public CommandBuffer Commands => world.Commands;
 }
 
-
-public class LazyEscapeSystem : ISystem
+public readonly struct DrawContext
 {
-    public void Update(World world, GameTime gameTime)
+    private readonly World world;
+    public readonly SpriteBatch SpriteBatch;
+
+    internal DrawContext(World w, SpriteBatch sb) { world = w; SpriteBatch = sb; }
+
+    public SparseSet<T> Store<T>() where T : struct => world.Store<T>();
+    public ref readonly T Get<T>(Entity e) where T : struct => ref world.GetComponent<T>(e);
+    public bool Has<T>(Entity e) where T : struct => world.HasComponent<T>(e);
+}
+
+public class DrawSystem : IDraw
+{
+    public void Draw(DrawContext ctx, GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            world.Exit();
+        var sprites = ctx.Store<Image2DComponent>();
+        var positions = ctx.Store<Position>();
+
+        foreach (int e in sprites.Entities)
+        {
+            if (!positions.Has(e)) continue;
+            ctx.SpriteBatch.Draw(sprites.Get(e).Texture, positions.Get(e).Value, Color.White);
+        }
     }
 }

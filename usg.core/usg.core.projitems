@@ -9,6 +9,7 @@
     <Import_RootNamespace>usg.core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CommandBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Defaults.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EntityManager.cs" />

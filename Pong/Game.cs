@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using usg.core;
 
 namespace Pong;
@@ -14,7 +15,6 @@ public class Game : Core
     {
         world = new World();
         Defaults.WithDefaultSystems(world);
-        Defaults.WithLazyEscape(world);
 
         ball = world.EntityCreate();
         world.AddComponent(ball, new Position { Value = new Vector2(960, 540) });
@@ -37,6 +37,9 @@ public class Game : Core
 
     protected override void Update(GameTime gameTime)
     {
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            Exit();
+
         base.Update(gameTime);
         world.Update(gameTime);
     }
@@ -45,7 +48,7 @@ public class Game : Core
     {
         base.Draw(gameTime);
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        world.Draw(gameTime);
+        world.Draw(gameTime, SpriteBatch);
         SpriteBatch.End();
     }
 }
