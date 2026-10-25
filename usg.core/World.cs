@@ -88,11 +88,16 @@ public class World
         }
     }
     public void AddDrawSystem(IDraw drawSystem) => drawSystems.Add(drawSystem);
-    public void Draw( GameTime gameTime)
+    public void Draw(GameTime gameTime)
     {
         foreach (var drawSystem in drawSystems)
         {
             drawSystem.Draw(this, Core.SpriteBatch, gameTime);
         }
+    }
+
+    public void Exit()
+    {
+        Core.Instance.Exit();
     }
 }
