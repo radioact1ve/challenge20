@@ -7,11 +7,11 @@ namespace usg.core;
 
 public class Core : Game
 {
-    public static Core Instance { get; private set; }
-    public static GraphicsDeviceManager Graphics { get; private set; }
-    public static new GraphicsDevice GraphicsDevice { get; private set; }
-    public static SpriteBatch SpriteBatch { get; private set; }
-    public static new ContentManager Content { get; private set; }
+    public Core Instance { get; private set; }
+    public GraphicsDeviceManager Graphics { get; private set; }
+    public new GraphicsDevice GraphicsDevice { get; private set; }
+    public SpriteBatch SpriteBatch { get; private set; }
+    public new ContentManager Content { get; private set; }
 
     public Core(string title, int width, int height, bool isFullScreen) : base()
     {

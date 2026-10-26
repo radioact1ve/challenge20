@@ -16,6 +16,8 @@ public class Game : Core
         world = new World();
         Defaults.WithDefaultSystems(world);
         world.AddSystem(new MovementSystem());
+        world.AddResource(new Score());
+        world.AddSystem(new PongRulesSystem(ball, paddle1, paddle2));
 
         ball = world.EntityCreate();
         world.AddComponent(ball, new Position { Value = new Vector2(960, 540) });
@@ -35,6 +37,12 @@ public class Game : Core
         world.AddComponent(ball, new Image2D { Texture = Content.Load<Texture2D>("pong/Ball") });
         world.AddComponent(paddle1, new Image2D { Texture = Content.Load<Texture2D>("pong/Paddle_1") });
         world.AddComponent(paddle2, new Image2D { Texture = Content.Load<Texture2D>("pong/Paddle_2") });
+
+        world.AddResource(new Screen
+        {
+            Width = GraphicsDevice.Viewport.Width,
+            Height = GraphicsDevice.Viewport.Height
+        });
     }
 
     protected override void Update(GameTime gameTime)

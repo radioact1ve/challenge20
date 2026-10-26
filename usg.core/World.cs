@@ -25,6 +25,7 @@ public class World
     public CommandBuffer Commands = new();
 
     private readonly Dictionary<Type, object> stores = new();
+    private readonly Dictionary<Type, object> resources = new();
 
     public World()
     {
@@ -76,6 +77,29 @@ public class World
     public void AddComponent<T>(Entity entity, T component) where T : struct
     {
         Store<T>().Add(entity.Id, component);
+    }
+
+    public void AddResource<T>(T resource) where T : class
+    {
+        resources[typeof(T)] = resource;
+    }
+
+    public T GetResource<T>() where T : class
+    {
+        if (!resources.TryGetValue(typeof(T), out var resource))
+            throw new InvalidOperationException($"Resource of type {typeof(T)} not found.");
+        return (T)resource;
+    }
+
+    public bool TryGetResource<T>(out T resource) where T : class
+    {
+        if (resources.TryGetValue(typeof(T), out var res))
+        {
+            resource = (T)res;
+            return true;
+        }
+        resource = null;
+        return false;
     }
 
     public void AddSystem(ISystem system) => systems.Add(system);
