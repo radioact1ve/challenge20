@@ -25,6 +25,28 @@ public class MovementSystem : ISystem
     }
 }
 
+public class PaddleMovementSystem : ISystem
+{
+    public void Update(SystemContext ctx, GameTime gameTime)
+    {
+        var input = ctx.Resource<InputState>();
+        var players = ctx.Store<PlayerControlled>();
+        var velocities = ctx.Store<Velocity>();
+
+        foreach (int e in players.Entities)
+        {
+            if (!velocities.Has(e)) continue;
+            ref var p = ref players.Get(e);
+
+            float dir = 0;
+            if (input.Keyboard.IsKeyDown(p.Up)) dir -= 1;
+            if (input.Keyboard.IsKeyDown(p.Down)) dir += 1;
+
+            velocities.Get(e).Value = new Vector2(0, dir * p.Speed);
+        }
+    }
+}
+
 public class PongRulesSystem : ISystem
 {
     private readonly Entity ball, left, right;
