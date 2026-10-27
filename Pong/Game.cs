@@ -15,7 +15,7 @@ public class Game : Core
     {
         world = new World();
 
-        Defaults.WithDefaultSystems(world);
+        world.AddDrawSystem(new DrawSystem());
         world.AddSystem(new PaddleMovementSystem());
         world.AddSystem(new MovementSystem());
         world.AddResource(new Score());

@@ -30,8 +30,11 @@ public class PaddleMovementSystem : ISystem
     public void Update(SystemContext ctx, GameTime gameTime)
     {
         var input = ctx.Resource<InputState>();
+        var screen = ctx.Resource<Screen>();
+
         var players = ctx.Store<PlayerControlled>();
         var velocities = ctx.Store<Velocity>();
+        var positions = ctx.Store<Position>();
 
         foreach (int e in players.Entities)
         {
@@ -41,6 +44,10 @@ public class PaddleMovementSystem : ISystem
             float dir = 0;
             if (input.Keyboard.IsKeyDown(p.Up)) dir -= 1;
             if (input.Keyboard.IsKeyDown(p.Down)) dir += 1;
+
+            var size = PongRulesSystem.Size(ctx, ctx.Handle(e));
+
+            positions.Get(e).Value.Y = MathHelper.Clamp(positions.Get(e).Value.Y, 0, screen.Height - size.Y);
 
             velocities.Get(e).Value = new Vector2(0, dir * p.Speed);
         }
@@ -113,7 +120,7 @@ public class PongRulesSystem : ISystem
     }
 
     // DrawSystem draws at the texture's native size, so the texture size is the hitbox.
-    private static Vector2 Size(SystemContext ctx, Entity e)
+    public static Vector2 Size(SystemContext ctx, Entity e)
     {
         var t = ctx.Get<Image2D>(e).Texture;
         return new Vector2(t.Width, t.Height);

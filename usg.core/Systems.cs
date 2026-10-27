@@ -8,6 +8,8 @@ public readonly struct SystemContext
     private readonly World world;
     internal SystemContext(World w) => world = w;
     public T Resource<T>() where T : class => world.GetResource<T>();
+    public Entity Handle(int id) => world.Handle(id);
+
     public SparseSet<T> Store<T>() where T : struct => world.Store<T>();
     public ref T Get<T>(Entity e) where T : struct => ref world.GetComponent<T>(e);
     public bool Has<T>(Entity e) where T : struct => world.HasComponent<T>(e);
