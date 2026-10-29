@@ -1,10 +1,15 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
-namespace Pong
+namespace Pong;
+
+public struct PlayerControlled
 {
-    public struct PlayerControlled
-    {
-        public Keys Up, Down;
-        public float Speed;
-    }
+    public Keys Up, Down;
+    public float Speed;
+}
+
+public struct Font
+{
+    public SpriteFont Value;
 }

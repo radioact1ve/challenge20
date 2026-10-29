@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using usg.core;
 
@@ -124,5 +125,32 @@ public class PongRulesSystem : ISystem
     {
         var t = ctx.Get<Image2D>(e).Texture;
         return new Vector2(t.Width, t.Height);
+    }
+}
+
+public class DrawTextSystem : IDraw
+{
+    public void Draw(DrawContext ctx, GameTime gameTime)
+    {
+        var score = ctx.Resource<Score>();
+        var fonts = ctx.Store<Font>();
+        var positions = ctx.Store<Position>();
+
+        foreach (int e in fonts.Entities)
+        {
+            if (!positions.Has(e)) continue;
+            ctx.SpriteBatch.DrawString(
+                fonts.Get(e).Value,
+                 $"{score.Left}   {score.Right}",
+                 positions.Get(e).Value,
+                 Color.White,
+                 0f,
+                 Vector2.Zero,
+                 new Vector2(2, 2),
+                 SpriteEffects.None,
+                 0f
+            );
+
+        }
     }
 }
