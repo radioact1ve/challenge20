@@ -40,11 +40,48 @@ public class PaddleMovementSystem : ISystem
         foreach (int e in players.Entities)
         {
             if (!velocities.Has(e)) continue;
+            if (!positions.Has(e)) continue;
+
             ref var p = ref players.Get(e);
 
             float dir = 0;
             if (input.Keyboard.IsKeyDown(p.Up)) dir -= 1;
             if (input.Keyboard.IsKeyDown(p.Down)) dir += 1;
+
+            var size = PongRulesSystem.Size(ctx, ctx.Handle(e));
+
+            positions.Get(e).Value.Y = MathHelper.Clamp(positions.Get(e).Value.Y, 0, screen.Height - size.Y);
+
+            velocities.Get(e).Value = new Vector2(0, dir * p.Speed);
+        }
+    }
+}
+
+public class AIPaddleMovementSystem : ISystem
+{
+    public void Update(SystemContext ctx, GameTime gameTime)
+    {
+        var screen = ctx.Resource<Screen>();
+
+        var AIs = ctx.Store<AIControlled>();
+        var velocities = ctx.Store<Velocity>();
+        var positions = ctx.Store<Position>();
+
+        var balls = ctx.Store<Ball>();
+        var ball = ctx.Handle(balls.Entities[0]); // getting the one and only ball
+        if (!positions.Has(ball.Id)) return;
+        var ballPosition = positions.Get(ball.Id);
+
+        foreach (int e in AIs.Entities)
+        {
+            if (!velocities.Has(e)) continue;
+            if (!positions.Has(e)) continue;
+
+            ref var p = ref AIs.Get(e);
+
+            float dir = 0;
+            if (ballPosition.Value.Y < positions.Get(e).Value.Y) dir -= 1;
+            if (ballPosition.Value.Y > positions.Get(e).Value.Y) dir += 1;
 
             var size = PongRulesSystem.Size(ctx, ctx.Handle(e));
 

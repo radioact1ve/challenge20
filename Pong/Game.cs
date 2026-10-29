@@ -20,12 +20,14 @@ public class Game : Core
         world.AddDrawSystem(new DrawSystem());
         world.AddDrawSystem(new DrawTextSystem());
         world.AddSystem(new PaddleMovementSystem());
+        world.AddSystem(new AIPaddleMovementSystem());
         world.AddSystem(new MovementSystem());
         world.AddResource(new Score());
         world.AddResource(new InputState());
 
 
         ball = world.EntityCreate();
+        world.AddComponent(ball, new Ball());
         world.AddComponent(ball, new Position { Value = new Vector2(640, 360) });
         world.AddComponent(ball, new Velocity { Value = new Vector2(500, 500) });
 
@@ -37,7 +39,7 @@ public class Game : Core
         paddle2 = world.EntityCreate();
         world.AddComponent(paddle2, new Position { Value = new Vector2(1180, 360) });
         world.AddComponent(paddle2, new Velocity { Value = new Vector2(0, 0) });
-        world.AddComponent(paddle2, new PlayerControlled { Up = Keys.Up, Down = Keys.Down, Speed = 425 });
+        world.AddComponent(paddle2, new AIControlled { Speed = 425 });
 
         world.AddSystem(new PongRulesSystem(ball, paddle1, paddle2));
 
@@ -46,7 +48,6 @@ public class Game : Core
 
         background = world.EntityCreate();
         world.AddComponent(background, new Position { Value = new Vector2(0, 0) });
-
     }
 
     protected override void LoadContent()
