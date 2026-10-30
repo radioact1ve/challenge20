@@ -8,63 +8,25 @@ namespace flappy;
 public class Game : Core
 {
     private readonly World world;
-    private Entity ball;
-    private Entity paddle1;
-    private Entity paddle2;
-    private Entity scoreboard;
-    private Entity background;
+    private Entity bird;
     public Game() : base("flapy", 1280, 720, false)
     {
         world = new World();
 
-        //world.AddDrawSystem(new DrawSystem());
-        //world.AddDrawSystem(new DrawTextSystem());
-        //world.AddSystem(new PaddleMovementSystem());
-        //world.AddSystem(new AIPaddleMovementSystem());
-        //world.AddSystem(new MovementSystem());
-        //world.AddResource(new Score());
+        world.AddDrawSystem(new DrawSystem());
         world.AddResource(new InputState());
 
 
-        //ball = world.EntityCreate();
-        //world.AddComponent(ball, new Ball());
-        //world.AddComponent(ball, new Position { Value = new Vector2(640, 360) });
-        //world.AddComponent(ball, new Velocity { Value = new Vector2(500, 500) });
-
-        //paddle1 = world.EntityCreate();
-        //world.AddComponent(paddle1, new Position { Value = new Vector2(100, 360) });
-        //world.AddComponent(paddle1, new Velocity { Value = new Vector2(0, 0) });
-        //world.AddComponent(paddle1, new PlayerControlled { Up = Keys.W, Down = Keys.S, Speed = 425 });
-
-        //paddle2 = world.EntityCreate();
-        //world.AddComponent(paddle2, new Position { Value = new Vector2(1180, 360) });
-        //world.AddComponent(paddle2, new Velocity { Value = new Vector2(0, 0) });
-        //world.AddComponent(paddle2, new AIControlled { Speed = 425 });
-
-        //world.AddSystem(new PongRulesSystem(ball, paddle1, paddle2));
-
-        //scoreboard = world.EntityCreate();
-        //world.AddComponent(scoreboard, new Position { Value = new Vector2(1280 / 2, 25 / 2) });
-
-        //background = world.EntityCreate();
-        //world.AddComponent(background, new Position { Value = new Vector2(0, 0) });
+        bird = world.EntityCreate();
+        world.AddComponent(bird, new Bird());
+        world.AddComponent(bird, new Position { Value = new Vector2(50, 360) });
+        world.AddComponent(bird, new Velocity { Value = new Vector2(0, 0) });
     }
 
     protected override void LoadContent()
     {
         base.LoadContent();
-        //world.AddComponent(background, new Image2D { Texture = Content.Load<Texture2D>("pong/Background_Grid") });
-
-        //world.AddComponent(ball, new Image2D { Texture = Content.Load<Texture2D>("pong/Ball") });
-        //world.AddComponent(paddle1, new Image2D { Texture = Content.Load<Texture2D>("pong/Paddle_1") });
-        //world.AddComponent(paddle2, new Image2D { Texture = Content.Load<Texture2D>("pong/Paddle_2") });
-        //world.AddComponent(scoreboard, new Font { Value = Content.Load<SpriteFont>("Fonts/Hud") });
-
-        //world.AddResource(new Screen
-        //{
-        //    Width = GraphicsDevice.Viewport.Width,
-        //    Height = GraphicsDevice.Viewport.Height
-        //});
+        world.AddComponent(bird, new Image2D { Texture = Content.Load<Texture2D>("flappy/Player/StyleBird1/Bird1-1") });
     }
 
     protected override void Update(GameTime gameTime)
