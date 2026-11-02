@@ -9,6 +9,7 @@ public class Game : Core
 {
     private readonly World world;
     private Entity bird;
+    private Entity background;
     public Game() : base("flapy", 1280, 720, false)
     {
         world = new World();
@@ -16,17 +17,20 @@ public class Game : Core
         world.AddDrawSystem(new DrawSystem());
         world.AddResource(new InputState());
 
-
         bird = world.EntityCreate();
         world.AddComponent(bird, new Bird());
         world.AddComponent(bird, new Position { Value = new Vector2(50, 360) });
         world.AddComponent(bird, new Velocity { Value = new Vector2(0, 0) });
+
+        background = world.EntityCreate();
+        world.AddComponent(background, new Position { Value = new Vector2(0, 0) });
     }
 
     protected override void LoadContent()
     {
         base.LoadContent();
         world.AddComponent(bird, new Image2D { Texture = Content.Load<Texture2D>("flappy/Player/StyleBird1/Bird1-1") });
+        world.AddComponent(background, new Image2D { Texture = Content.Load<Texture2D>("flappy/Background/Background2") });
     }
 
     protected override void Update(GameTime gameTime)
