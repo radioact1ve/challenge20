@@ -10,8 +10,10 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.5" />
-    <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5">
+    <PackageReference Include="MonoGame.Extended" Version="6.1.1" />
+    <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="6.1.1" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.6" />
+    <PackageReference Include="MonoGame.Framework.Native" Version="3.8.6">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.*" />

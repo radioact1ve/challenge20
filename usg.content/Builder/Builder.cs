@@ -36,6 +36,7 @@ public class Builder : ContentBuilder
     {
         var contentCollection = new ContentCollection();
         contentCollection.Include<WildcardRule>("*");
+        contentCollection.Include<WildcardRule>("*.json", new TexturePackerAtlasImporter(), new TexturePackerAtlasProcessor());
 
         // By default, no content will be imported from the Assets folder using the default importer for their file type.
         // Please define your content collection rules here.

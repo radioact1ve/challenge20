@@ -1,0 +1,34 @@
+{
+	"textures": [
+		{
+			"filename": "Player/StyleBird1/Bird1-1.png",
+			"format": "RGBA8888",
+			"size": {"w":64,"h":16},
+			"frames": {
+				"flap-00":{
+					"frame": {"x":0,"y":0,"w":16,"h":16},
+					"size": {"w":16,"h":16}
+				},
+				"flap-01":{
+					"frame": {"x":16,"y":0,"w":16,"h":16},
+					"size": {"w":16,"h":16}
+				},
+				"flap-02":{
+					"frame": {"x":32,"y":0,"w":16,"h":16},
+					"size": {"w":16,"h":16}
+				},
+				"flap-03":{
+					"frame": {"x":48,"y":0	,"w":16,"h":16},
+					"size": {"w":16,"h":16}
+				}
+			}
+		}
+	],
+
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"dataformat": "monogame-extended",
+		"version": "1.2",
+		"smartupdate": "$TexturePacker:SmartUpdate:cb899ce6eeed1ad3c68979f1cd64f53a:bfd8ba5ed37cfe22b6eba13c9b7e5178:948cac0a3f1a563d2e5fdf10cc2a8ee8$"
+	}
+}

@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using MonoGame.Extended.Graphics;
+using MonoGame.Extended.Particles;
 namespace usg.core;
 
 public readonly struct SystemContext
@@ -27,7 +28,7 @@ public readonly struct DrawContext
     public bool Has<T>(Entity e) where T : struct => world.HasComponent<T>(e);
 }
 
-public class DrawSystem : IDraw
+public class DrawImage : IDraw
 {
     public void Draw(DrawContext ctx, GameTime gameTime)
     {
@@ -38,6 +39,23 @@ public class DrawSystem : IDraw
         {
             if (!positions.Has(e)) continue;
             ctx.SpriteBatch.Draw(sprites.Get(e).Texture, positions.Get(e).Value, Color.White);
+        }
+    }
+}
+
+public class DrawSprite : IDraw
+{
+    public void Draw(DrawContext ctx, GameTime gameTime)
+    {
+        var animations = ctx.Store<Animation2D>();
+        var positions = ctx.Store<Position>();
+
+        foreach (int e in animations.Entities)
+        {
+            if (!positions.Has(e)) continue;
+            var sprite = animations.Get(e).Sprite;
+            ctx.SpriteBatch.Draw(sprite, positions.Get(e).Value, 0, new Vector2(5));
+
         }
     }
 }

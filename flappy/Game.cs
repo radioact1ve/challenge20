@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Graphics;
+using System;
 using usg.core;
 
 namespace flappy;
@@ -14,7 +16,8 @@ public class Game : Core
     {
         world = new World();
 
-        world.AddDrawSystem(new DrawSystem());
+        world.AddSystem(new AnimationSystem());
+        world.AddDrawSystem(new DrawSprite());
         world.AddResource(new InputState());
 
         bird = world.EntityCreate();
@@ -29,8 +32,19 @@ public class Game : Core
     protected override void LoadContent()
     {
         base.LoadContent();
-        world.AddComponent(bird, new Image2D { Texture = Content.Load<Texture2D>("flappy/Player/StyleBird1/Bird1-1") });
-        world.AddComponent(background, new Image2D { Texture = Content.Load<Texture2D>("flappy/Background/Background2") });
+
+        Texture2DAtlas atlas = Content.Load<Texture2DAtlas>("flappy/Bird1-1");
+        SpriteSheet spriteSheet = new SpriteSheet("SpriteSheet/flappy", atlas);
+        TimeSpan duration = TimeSpan.FromSeconds(0.1);
+        spriteSheet.DefineAnimation("flap", builder =>
+        {
+            builder.IsLooping(true)
+                   .AddFrame("flap-00", duration)
+                   .AddFrame("flap-01", duration)
+                   .AddFrame("flap-02", duration)
+                   .AddFrame("flap-03", duration);
+        });
+        world.AddComponent(bird, new Animation2D { Sprite = new AnimatedSprite(spriteSheet, "flap") });
     }
 
     protected override void Update(GameTime gameTime)

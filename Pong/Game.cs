@@ -17,7 +17,7 @@ public class Game : Core
     {
         world = new World();
 
-        world.AddDrawSystem(new DrawSystem());
+        world.AddDrawSystem(new DrawImage());
         world.AddDrawSystem(new DrawTextSystem());
         world.AddSystem(new PaddleMovementSystem());
         world.AddSystem(new AIPaddleMovementSystem());

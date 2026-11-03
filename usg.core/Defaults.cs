@@ -4,6 +4,6 @@ public class Defaults
 {
     public static void WithDefaultSystems(World world)
     {
-        world.AddDrawSystem(new DrawSystem());
+        world.AddDrawSystem(new DrawImage());
     }
 }

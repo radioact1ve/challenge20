@@ -1,12 +1,17 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Graphics;
 
 namespace usg.core;
 
 public struct Image2D
 {
     public Texture2D Texture;
+}
+public struct Animation2D
+{
+    public AnimatedSprite Sprite;
 }
 
 public struct Position
