@@ -16,26 +16,36 @@ public class Game : Core
     {
         world = new World();
 
+        world.AddResource(new Gravity());
+        world.AddResource(new Screen { Width = 1280, Height = 720 });
+        world.AddResource(new InputState());
+
+        world.AddSystem(new GravitySystem());
+        world.AddSystem(new MovementSystem());
         world.AddSystem(new AnimationSystem());
         world.AddDrawSystem(new DrawSprite());
-        world.AddResource(new InputState());
 
         bird = world.EntityCreate();
         world.AddComponent(bird, new Bird());
         world.AddComponent(bird, new Position { Value = new Vector2(50, 360) });
-        world.AddComponent(bird, new Velocity { Value = new Vector2(0, 0) });
+        world.AddComponent(bird, new Velocity { Value = new Vector2(0, 100) });
+        world.AddComponent(bird, new GravityScale { Value = 2.0f });
 
-        background = world.EntityCreate();
-        world.AddComponent(background, new Position { Value = new Vector2(0, 0) });
+        //background = world.EntityCreate();
+        //world.AddComponent(background, new Position { Value = new Vector2(0, 0) });
     }
 
     protected override void LoadContent()
     {
         base.LoadContent();
+        world.AddComponent(bird, new Animation2D { Sprite = makeBirdSprite() });
+    }
 
-        Texture2DAtlas atlas = Content.Load<Texture2DAtlas>("flappy/Bird1-1");
-        SpriteSheet spriteSheet = new SpriteSheet("SpriteSheet/flappy", atlas);
-        TimeSpan duration = TimeSpan.FromSeconds(0.1);
+    private AnimatedSprite makeBirdSprite()
+    {
+        var atlas = Content.Load<Texture2DAtlas>("flappy/Bird1-1");
+        var spriteSheet = new SpriteSheet("SpriteSheet/flappy", atlas);
+        var duration = TimeSpan.FromSeconds(0.1);
         spriteSheet.DefineAnimation("flap", builder =>
         {
             builder.IsLooping(true)
@@ -44,7 +54,7 @@ public class Game : Core
                    .AddFrame("flap-02", duration)
                    .AddFrame("flap-03", duration);
         });
-        world.AddComponent(bird, new Animation2D { Sprite = new AnimatedSprite(spriteSheet, "flap") });
+        return new AnimatedSprite(spriteSheet, "flap");
     }
 
     protected override void Update(GameTime gameTime)

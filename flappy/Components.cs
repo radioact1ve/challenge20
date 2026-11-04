@@ -20,3 +20,8 @@ public struct Font
 {
     public SpriteFont Value;
 }
+
+public struct GravityScale
+{
+    public float Value;
+}

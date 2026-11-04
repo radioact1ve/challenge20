@@ -21,7 +21,7 @@ public class Game : Core
         world.AddDrawSystem(new DrawTextSystem());
         world.AddSystem(new PaddleMovementSystem());
         world.AddSystem(new AIPaddleMovementSystem());
-        world.AddSystem(new MovementSystem());
+        world.AddSystem(new BasicMovementSystem());
         world.AddResource(new Score());
         world.AddResource(new InputState());
 
